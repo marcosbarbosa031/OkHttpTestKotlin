@@ -21,18 +21,22 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import org.json.JSONException
-import java.lang.IllegalArgumentException
+import kotlin.IllegalArgumentException
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
+    //VIEW
     private var buttonSendGET: Button? = null
     private var buttonSendPOST: Button? = null
     private var jsonTextField: TextView? = null
     private var input: EditText? = null
 
+    //OKHTTP
     private var client: OkHttpClient? = null
     private var request: Request? = null
-//    private val url: String? = null// = "https://minha-merenda.herokuapp.com/ts830/list/escola";
+    private val http = OkHttpClass();
+
+    //JSON RETURN
     private var json: String? = null
     private var jsonresp = JSONArray()
 
@@ -47,11 +51,10 @@ class MainActivity : AppCompatActivity() {
 
 
         buttonSendGET!!.setOnClickListener {
-            jsonTextField!!.text = "Awaiting response..."
+            jsonTextField!!.text = "Awaiting response from GET..."
 
-            thread(){
+            thread {
                 try{
-                    val http = OkHttpClass()
                     client = http.client
                     request = http.getRequest(input!!.text.toString())
                     json = http.GETurl(client, request)
@@ -66,6 +69,24 @@ class MainActivity : AppCompatActivity() {
                         }catch (e : JSONException){
                             jsonTextField!!.text = json
                         }
+                    }
+
+                }catch (e : IllegalArgumentException){
+                    jsonTextField!!.text = e.message
+                }
+            }
+        }
+
+        buttonSendPOST!!.setOnClickListener {
+            jsonTextField!!.text = "Awaiting response from POST..."
+            thread {
+                try{
+                    client = http.client
+                    json = "{\"escola\": null, \"usuario\": 1, \"pontuacao\": 5, \"foto\": \"none\"}"
+                    json = http.POSTurl(client, json, "minha-merenda.herokuapp.com/ts830/create/avaliacao")
+
+                    this.runOnUiThread {
+                        jsonTextField!!.text = json;
                     }
 
                 }catch (e : IllegalArgumentException){

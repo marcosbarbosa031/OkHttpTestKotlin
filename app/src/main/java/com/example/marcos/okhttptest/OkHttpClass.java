@@ -34,7 +34,7 @@ public class OkHttpClass {
     public String POSTurl(OkHttpClient client, String json, String url) throws IOException {
         RequestBody body = RequestBody.create(JSON, json);
         this.request = new Request.Builder()
-                .url(url)
+                .url("https://"+url)
                 .post(body)
                 .build();
         Response response = client.newCall(request).execute();
