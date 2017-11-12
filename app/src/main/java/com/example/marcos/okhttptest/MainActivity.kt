@@ -20,9 +20,13 @@ import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import org.json.JSONException
+import java.lang.IllegalArgumentException
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
-    private var buttonSendRequest: Button? = null
+    private var buttonSendGET: Button? = null
+    private var buttonSendPOST: Button? = null
     private var jsonTextField: TextView? = null
     private var input: EditText? = null
 
@@ -36,34 +40,37 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        buttonSendRequest = findViewById<View>(R.id.buttonRequest) as Button
+        buttonSendGET = findViewById<View>(R.id.buttonGET) as Button
+        buttonSendPOST = findViewById<View>(R.id.buttonPOST) as Button
         jsonTextField = findViewById<View>(R.id.jsonField) as TextView
         input = findViewById<View>(R.id.urlInput) as EditText
 
 
-        buttonSendRequest!!.setOnClickListener {
+        buttonSendGET!!.setOnClickListener {
             jsonTextField!!.text = "Awaiting response..."
-            try {
-                val http = OkHttpClass()
-                client = http.client
-                request = http.getRequest(input!!.text.toString())
 
-                http.GETurl(client, request, jsonTextField, this@MainActivity)
+            thread(){
+                try{
+                    val http = OkHttpClass()
+                    client = http.client
+                    request = http.getRequest(input!!.text.toString())
+                    json = http.GETurl(client, request)
 
-//                json = jsonresp.toString()
-//                jsonTextField!!.text = json
-//                jsonTextField!!.movementMethod = ScrollingMovementMethod()
+                    this.runOnUiThread {
+                        try {
+                            jsonresp = org.json.JSONArray(json)
+                            var s = "";
+                            for (i in 0 until jsonresp.length())
+                                s += jsonresp.getJSONObject(i).getString("escolaNome") + "\n"
+                            jsonTextField!!.text = s;
+                        }catch (e : JSONException){
+                            jsonTextField!!.text = json
+                        }
+                    }
 
-                //Update view
-//                try {
-//                    jsonTextField!!.text = json;
-//                    jsonTextField!!.movementMethod = ScrollingMovementMethod()
-//                }catch (e : NullPointerException){
-//                    jsonTextField!!.text = e.message
-//                }
-
-            } catch (e: IllegalArgumentException) {
-                jsonTextField!!.text = e.message
+                }catch (e : IllegalArgumentException){
+                    jsonTextField!!.text = e.message
+                }
             }
         }
     }

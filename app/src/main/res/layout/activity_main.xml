@@ -32,7 +32,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="@android:dimen/notification_large_icon_height" />
+            android:layout_height="30dip" />
 
         <EditText
             android:id="@+id/urlInput"
@@ -45,13 +45,23 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="@android:dimen/notification_large_icon_height" />
+            android:layout_height="30dip" />
 
         <Button
-            android:id="@+id/buttonRequest"
+            android:id="@+id/buttonGET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="GET" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dip" />
+
+        <Button
+            android:id="@+id/buttonPOST"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="POST" />
 
         <Space
             android:layout_width="match_parent"
