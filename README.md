@@ -2,4 +2,4 @@
 <br>
 <p><b>Kotlin/Java code in:</b> app/src/main/java/com/example/marcos/okhttptest/</p>
 <br>
-<img src="https://photos.google.com/u/2/photo/AF1QipOe6jJW8bxdTyFIqzkJhkjqPlhgGSF77iuB3IKi" width="auto" height="auto">
+<img src="https://i.imgur.com/XtYvGTA.png" width="auto" height="auto">
