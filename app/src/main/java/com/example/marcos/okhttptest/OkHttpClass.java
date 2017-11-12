@@ -5,6 +5,9 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -22,25 +25,33 @@ public class OkHttpClass {
     private OkHttpClient client;
     private Request request;
     private String json;
+    private JSONArray jsonarray;
     //private static final String TAG = MainActivity.class.getName();
 
     public OkHttpClass() {
     }
 
-    public void connect(OkHttpClient client, Request request, final TextView jsonTextField, final MainActivity a){
+    public void GETurl(OkHttpClient client, Request request,final TextView jsonTextField, final MainActivity a){
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 json = e.getMessage();
-                Log.i("TAG", json);
+//                Log.i("TAG", json);
                 new Thread(){
                     public void run(){
                         a.runOnUiThread(new Runnable(){
 
                             @Override
                             public void run() {
-                                jsonTextField.setText(json);
-                                jsonTextField.setMovementMethod(new ScrollingMovementMethod());
+                                try {
+                                    jsonarray = new JSONArray(json);
+                                    Log.i("TAG", jsonarray.toString());
+                                    jsonTextField.setText(jsonarray.toString());
+                                    jsonTextField.setMovementMethod(new ScrollingMovementMethod());
+                                } catch (JSONException e1) {
+                                    jsonTextField.setText(json);
+                                    jsonTextField.setMovementMethod(new ScrollingMovementMethod());
+                                }
                             }
                         });
                     }
@@ -50,21 +61,31 @@ public class OkHttpClass {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 json = response.body().string();
-                Log.i("TAG", json);
+                //Log.i("TAG", json);
                 new Thread(){
                     public void run(){
                         a.runOnUiThread(new Runnable(){
 
                             @Override
                             public void run() {
-                                jsonTextField.setText(json);
-                                jsonTextField.setMovementMethod(new ScrollingMovementMethod());
+                                //JSONarray Return
+                                try {
+                                    jsonarray = new JSONArray(json);
+                                    Log.i("TAG", jsonarray.toString());
+                                    jsonTextField.setText(jsonarray.toString());
+                                    jsonTextField.setMovementMethod(new ScrollingMovementMethod());
+                                } catch (JSONException e) {
+                                    jsonTextField.setText(json);
+                                    jsonTextField.setMovementMethod(new ScrollingMovementMethod());
+                                }
                             }
                         });
                     }
                 }.start();
             }
         });
+        //return jsonarray;
+        //return json;
     }
 
     public OkHttpClient getClient() {

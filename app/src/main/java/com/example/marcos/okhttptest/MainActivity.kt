@@ -28,9 +28,9 @@ class MainActivity : AppCompatActivity() {
 
     private var client: OkHttpClient? = null
     private var request: Request? = null
-    private val url: String? = null// = "https://minha-merenda.herokuapp.com/ts830/list/escola";
-    private val json: String? = null
-    private val jsonresp = JSONArray()
+//    private val url: String? = null// = "https://minha-merenda.herokuapp.com/ts830/list/escola";
+    private var json: String? = null
+    private var jsonresp = JSONArray()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +42,26 @@ class MainActivity : AppCompatActivity() {
 
 
         buttonSendRequest!!.setOnClickListener {
+            jsonTextField!!.text = "Awaiting response..."
             try {
                 val http = OkHttpClass()
                 client = http.client
                 request = http.getRequest(input!!.text.toString())
-                http.connect(client, request, jsonTextField, this@MainActivity)
+
+                http.GETurl(client, request, jsonTextField, this@MainActivity)
+
+//                json = jsonresp.toString()
+//                jsonTextField!!.text = json
+//                jsonTextField!!.movementMethod = ScrollingMovementMethod()
+
+                //Update view
+//                try {
+//                    jsonTextField!!.text = json;
+//                    jsonTextField!!.movementMethod = ScrollingMovementMethod()
+//                }catch (e : NullPointerException){
+//                    jsonTextField!!.text = e.message
+//                }
+
             } catch (e: IllegalArgumentException) {
                 jsonTextField!!.text = e.message
             }
