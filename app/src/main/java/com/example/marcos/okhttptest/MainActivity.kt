@@ -6,9 +6,7 @@ import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 
 import org.json.JSONArray
 import org.json.JSONObject
@@ -21,7 +19,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import org.json.JSONException
+import java.lang.NullPointerException
+import java.net.SocketTimeoutException
 import kotlin.IllegalArgumentException
+//import kotlin.NullPointerException
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
@@ -30,11 +31,15 @@ class MainActivity : AppCompatActivity() {
     private var buttonSendPOST: Button? = null
     private var jsonTextField: TextView? = null
     private var input: EditText? = null
+    private var cbEscolas: Spinner? = null
 
     //OKHTTP
     private var client: OkHttpClient? = null
     private var request: Request? = null
-    private val http = OkHttpClass();
+    private val http = OkHttpClass()
+
+    //CLASSES TO MAP
+//    private val escola = ArrayList<Escola>()
 
     //JSON RETURN
     private var json: String? = null
@@ -48,7 +53,9 @@ class MainActivity : AppCompatActivity() {
         buttonSendPOST = findViewById<View>(R.id.buttonPOST) as Button
         jsonTextField = findViewById<View>(R.id.jsonField) as TextView
         input = findViewById<View>(R.id.urlInput) as EditText
+        cbEscolas = findViewById<View>(R.id.comboBox) as Spinner
 
+        val escolaList = ArrayList<Escola>()
 
         buttonSendGET!!.setOnClickListener {
             jsonTextField!!.text = "Awaiting response from GET..."
@@ -62,12 +69,45 @@ class MainActivity : AppCompatActivity() {
                     this.runOnUiThread {
                         try {
                             jsonresp = org.json.JSONArray(json)
-                            var s = "";
-                            for (i in 0 until jsonresp.length())
-                                s += jsonresp.getJSONObject(i).getString("escolaNome") + "\n"
-                            jsonTextField!!.text = s;
+                            var s = ""
+                            escolaList.clear()
+                            for (i in 0 until jsonresp.length()) {
+                                var r = Escola()
+                                s += "Escola: " + jsonresp.getJSONObject(i).getString("escolaNome") + "\n" +
+                                        "Latitude: " + jsonresp.getJSONObject(i).getString("latitude") + "\n" +
+                                        "Longitude: " + jsonresp.getJSONObject(i).getString("longitude") + "\n\n"
+
+                                r.setescolaNome(jsonresp.getJSONObject(i).getString("escolaNome"))
+                                r.setlatitude(jsonresp.getJSONObject(i).getString("latitude"))
+                                r.setlongitude(jsonresp.getJSONObject(i).getString("longitude"))
+
+
+                                escolaList.add(r)
+                            }
+
+                            for (i in escolaList){
+                                Log.i("TAG", i.getescolaNome())
+                            }
+
+                            jsonTextField!!.text = s
+
+//                            cbEscolas!!.adapter = ArrayAdapter<Escola>(this, android.R.layout.simple_spinner_item, escolaList)
+//
+//                            cbEscolas!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+//                                override fun onNothingSelected(parent: AdapterView<*>?) {
+//                                    jsonTextField!!.text = "Selecione uma opção"
+//                                }
+//
+//                                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+//                                    jsonTextField!!.text = escolaList[position].getescolaNome()
+//                                }
+//
+//                            }
+
                         }catch (e : JSONException){
                             jsonTextField!!.text = json
+                        }catch (e : SocketTimeoutException){
+                            jsonTextField!!.text = e.message
                         }
                     }
 

@@ -67,8 +67,13 @@
             android:layout_width="match_parent"
             android:layout_height="30dip" />
 
+        <Spinner
+            android:id="@+id/comboBox"
+            android:layout_width="match_parent"
+            android:layout_height="30dip" />
+
         <ScrollView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
