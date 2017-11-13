@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     private val http = OkHttpClass()
 
     //CLASSES TO MAP
-//    private val escola = ArrayList<Escola>()
+    private val escolaList = ArrayList<Escola>()
 
     //JSON RETURN
     private var json: String? = null
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         input = findViewById<View>(R.id.urlInput) as EditText
         cbEscolas = findViewById<View>(R.id.comboBox) as Spinner
 
-        val escolaList = ArrayList<Escola>()
+//        val escolaList = ArrayList<Escola>()
 
         buttonSendGET!!.setOnClickListener {
             jsonTextField!!.text = "Awaiting response from GET..."
@@ -65,6 +65,8 @@ class MainActivity : AppCompatActivity() {
                     client = http.client
                     request = http.getRequest(input!!.text.toString())
                     json = http.GETurl(client, request)
+
+                    Log.i("JSON", json)
 
                     this.runOnUiThread {
                         try {
@@ -85,24 +87,26 @@ class MainActivity : AppCompatActivity() {
                                 escolaList.add(r)
                             }
 
+                            val escolaString = ArrayList<String>()
                             for (i in escolaList){
                                 Log.i("TAG", i.getescolaNome())
+                                escolaString.add(i.getescolaNome().toString())
                             }
 
                             jsonTextField!!.text = s
 
-//                            cbEscolas!!.adapter = ArrayAdapter<Escola>(this, android.R.layout.simple_spinner_item, escolaList)
-//
-//                            cbEscolas!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-//                                override fun onNothingSelected(parent: AdapterView<*>?) {
-//                                    jsonTextField!!.text = "Selecione uma opção"
-//                                }
-//
-//                                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-//                                    jsonTextField!!.text = escolaList[position].getescolaNome()
-//                                }
-//
-//                            }
+                            cbEscolas!!.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, escolaString)
+
+                            cbEscolas!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+                                override fun onNothingSelected(parent: AdapterView<*>?) {
+                                    jsonTextField!!.text = "Selecione uma opção"
+                                }
+
+                                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+//                                    jsonTextField!!.text = escolaList[position].getescolaNome() + ", "+ escolaList[position].getlongitude()
+                                }
+
+                            }
 
                         }catch (e : JSONException){
                             jsonTextField!!.text = json

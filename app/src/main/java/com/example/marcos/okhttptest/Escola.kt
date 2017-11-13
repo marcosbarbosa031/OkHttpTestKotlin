@@ -5,6 +5,7 @@ package com.example.marcos.okhttptest
  */
 
 class Escola {
+    //add ID
     private var escolaNome: String? = null
     private var longitude: String? = null
     private var latitude: String? = null
